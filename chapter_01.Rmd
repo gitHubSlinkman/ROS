@@ -24,6 +24,7 @@ require( tidyverse )                    # I live in the tidyverse ...
 require( readr )                        # To read table objects ...
 require( rstanarm )                     # For Bayesian approach to statistics ...
 require( arm )                          # Additional Bayesian functionality ...
+require( cowplot )                      # For more profesional graphics ...
 library("bayesplot")                    # For plotting Bayesian analysis ...
 theme_set(bayesplot::theme_default(base_family = "sans"))
 ```
@@ -44,4 +45,31 @@ hibbs <- read_csv( fp )                # Read the file
 hibbs                                  # Verify file
 ```
 
+## Plot data showing year of election 
+
+```{r}
+pl <-  
+hibbs %>% 
+  ggplot( aes( x =growth, y = vote, label = year )) +
+    geom_text( ) +
+  xlab( "Average growth in personel income" ) +
+  ylab( "Incumbent's party share of the votes") +
+  ggtitle( "Forecasting the election from the economy")
+
+slr <- lm( vote ~ growth, data = hibbs )
+beta <- slr$coefficients
+
+pr <- 
+  hibbs %>% 
+    ggplot( aes( x =growth, y = vote, label = year )) +
+    geom_point() +
+    geom_smooth(method ="lm", se=FALSE ) +
+    annotate('text', x = 2, y =47, 
+        label = "hat(y) == beta[1]",
+        parse = TRUE,size=10) +
+    xlab( "Average growth in personel income" ) +
+    ylab( "Incumbent's party share of the votes") +
+    ggtitle( "Data and linear fit")
+pr
+```
 
