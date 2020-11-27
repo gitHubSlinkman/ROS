@@ -11,6 +11,43 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# Chapter 1: Overview
+
+This [book][1] explores the challenges of building, understanding, and using predictive models.
+
+## 1.1 The three challenges of statistics
+
+The three challenges of [statistical inference][2] are: 
+
+1. Generalizing from sample to population, a problem that is associated with survey sampling but  actually arises in nearly every application of statistical inference.
+
+2. Generalizing from treatment to control group, a problem that is associated with causal inference,  which is implicitly or explicitly part of the interpretation of most regressions we have seen.
+
+3. Generalizing from observed measurements to the underlying constructs of interest, as most of the  time our data do not record exactly what we would ideally like to study. 
+
+All three of these challenges can be framed as problems of prediction (for new people or new items  that are not in the sample, future outcomes under different potentially assigned treatments, and  underlying constructs of interest, if they could be measured exactly).  The key skills you should learn from this book are:  
+
+* Understanding regression models. These are mathematical models for predicting an outcome  variable from a set of predictors, starting with straight-line fits and moving to various nonlinear  generalizations.  
+
+* Constructing regression models. The regression framework is open-ended, with many options  involving the choice of what variables to include and how to transform and constrain them.  
+
+* Fitting regression models to data, which we do using the open-source software R and Stan.  
+
+* Displaying and interpreting the results, which requires additional programming skills and  mathematical understanding.  A central subject of this book.
+
+## Why learn regression?
+
+[Regression][3] is a method that allows researchers to summarize how predictions or average values of  Elections  and the  economy  an outcome vary across individuals defined by a set of predictors. For example, Figure 1.1a shows  the incumbent party’s vote share in a series of U.S. presidential elections, plotted vs. a measure of  economic growth in the period leading up to each election year. Figure 1.1b shows a linear regression  fit to these data. The model allows us to predict the vote—with some uncertainty—given the economy  and under the assumption that future elections are in some way like the past. 
+
+[3] Gelman, Andrew; Hill, Jennifer; Vehtari, Aki. Regression and Other Stories (Analytical Methods for Social Research) (p. 4). Cambridge University Press. Kindle Edition. 
+
+
+
+
+
+
+
+
 ## Load required directories
 
 Note we will use the Bayesian modeling language call $stan$.  $stan$ is a probabilistic programming language for statistical inference written in C++. The Stan language is used to specify a (Bayesian) statistical model with an imperative program calculating the log probability density function. Stan is licensed under the New BSD License.  
@@ -73,3 +110,10 @@ pr <-
 pr
 ```
 
+# References
+
+[1] Gelman, Andrew; Hill, Jennifer; Vehtari, Aki. Regression and Other Stories (Analytical Methods for Social Research) (p. 3). Cambridge University Press. Kindle Edition. 
+
+[2]Gelman, Andrew; Hill, Jennifer; Vehtari, Aki. Regression and Other Stories (Analytical Methods for Social Research) (p. 3). Cambridge University Press. Kindle Edition.
+
+[3] Gelman, Andrew; Hill, Jennifer; Vehtari, Aki. Regression and Other Stories (Analytical Methods for Social Research) (p. 4). Cambridge University Press. Kindle Edition. 
