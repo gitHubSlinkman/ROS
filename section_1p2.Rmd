@@ -1,0 +1,76 @@
+---
+title: "Section 1.2"
+author: "Andrew Gelmaan, at  all as implemnted by Craig Slinkman"
+date: "12/8/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+
+Regression[1] is a method that allows researchers to summarize how predictions or average values of outcome vary across individuals defined by a set of predictors.
+
+I live in the tidyverse and use ggplot2 to draw ggplot2 to draw my graphs.
+
+## Loading required packages
+
+I live in the tidyverse and use ggplot2 to draw ggplot2 to draw my graphs.
+
+We also need to load the stand packages so we can estimate the posterior distribution using stan.
+
+```{r}
+library( tidyverse )                     # I live in the tidyverse ...
+library( readr )                         # To read data in the tidyverse ...    
+library( cowplot )                       # For additional graphics functionality ...
+```
+
+## Read the hibbs data
+
+I have downloaded the data from the text website at at www.stat.columbia.edu/~gelman/regression/.
+It is my practice to store the data for a project in the data subdirectory of the R-project.  I then build a file path to the file directory.  We do this below.
+
+
+```{r}
+cd <- getwd()                           # Get current directory ...
+
+fp <-                                   # Construct file path to data.
+  file.path( cd,
+             "data",
+             "hibbs.csv" )
+
+hibbs <- read_csv( fp )                 # Read data as tibble ...
+
+hibbs                                   # Verify hibbs tibble
+```
+
+## Draw Figure 1.1a
+
+```{r}
+figure1.1a <-   
+    ggplot( hibbs,
+          aes( x = growth,
+               y = vote,
+               label = year ) ) +
+    geom_text() +
+    scale_x_continuous( name   = "Average recent growth in personal income",
+                        labels = scales::percent_format(accuracy = 1,
+                                                        scale    = 1.0)) +
+    scale_y_continuous( name   = "Incumbet party's vote share",
+                        labels = scales::percent_format( accuracy = 1,
+                                                         scale    = 1)) +
+    ggtitle( "Forecasting incumbets vote share from the economy" ) +
+    theme_cowplot()
+
+figure1.1a
+```
+
+## Figure 1.1b
+
+
+## References
+
+[1] Gelman, Andrew; Hill, Jennifer; Vehtari, Aki. Regression and Other Stories (Analytical Methods for Social Research) (p. 4). Cambridge University Press. Kindle Edition. 
