@@ -24,7 +24,9 @@ We also need to load the stand packages so we can estimate the posterior distrib
 
 ```{r}
 library( tidyverse )                     # I live in the tidyverse ...
-library( readr )                         # To read data in the tidyverse ...    
+library( readr )                         # To read data in the tidyverse ...
+library( rstan )                         # For Monte Carlo simulation ...
+library(rstanarm )                       # For Bayesian applied regression modeling ...
 library( cowplot )                       # For additional graphics functionality ...
 ```
 
@@ -50,7 +52,7 @@ hibbs                                   # Verify hibbs tibble
 ## Draw Figure 1.1a
 
 ```{r}
-figure1.1a <-   
+figure_01.1a <-   
     ggplot( hibbs,
           aes( x = growth,
                y = vote,
@@ -65,12 +67,72 @@ figure1.1a <-
     ggtitle( "Forecasting incumbets vote share from the economy" ) +
     theme_cowplot()
 
-figure1.1a
+figure_01.1a
 ```
 
 ## Figure 1.1b
+
+My first version is just to plot the regression points.  I will add the
+estimated regression line latter to show how one can add layers to a plot
+using ggplot.
+
+### Just the points
+
+```{r}
+figure_01.1b <- 
+  ggplot( hibbs,
+          aes( x = growth, y = vote )) +
+    geom_point() +
+     scale_x_continuous( name   = "Average recent growth in personal income",
+                        labels = scales::percent_format(accuracy = 1,
+                                                        scale    = 1.0)) +
+    scale_y_continuous( name   = "Incumbet party's vote share",
+                        labels = scales::percent_format( accuracy = 1,
+                                                         scale    = 1)) +
+    ggtitle( "Forecasting incumbets vote share from the economy" ) +
+    theme_cowplot()
+
+figure_01.1b
+```
+
+
+### Estimating the regression function using Monte Carlo methos
+
+In this text we will not use classical estimation techniques but will Bayesian 
+estimation techniques statistics.  For most of the models we can't are unable to use the conjugate prior method to estimate the posterior distribution. We will use Markov Chain Monte Carlo [2]approach to estimate the posterior distribution.
+
+>Markov chain Monte Carlo (MCMC) methods comprise a class of algorithms for sampling from a probability distribution. By constructing a Markov chain that has the desired distribution as its equilibrium distribution, one can obtain a sample of the desired distribution by recording states from the chain. The more steps that are included, the more closely the distribution of the sample matches the actual desired distribution. Various algorithms exist for constructing chains, including the Metropolis–Hastings algorithm.
+
+We use the R-package **rstan** and **rsyanarm** to estimate the posterior distributios for Bauesian estimation problems.  According ro the The stand organization[3] the package  
+
+>**rstanarm** is an R package that emulates other R model-fitting functions but uses Stan (via the rstan package) for the back-end estimation. The primary target audience is people who would be open to Bayesian inference if using Bayesian software were easier but would use frequentist software otherwise.
+
+>Fitting models with rstanarm is also useful for experienced Bayesian software users who want to take advantage of the pre-compiled Stan programs that are written by Stan developers and carefully implemented to prioritize numerical stability and the avoidance of sampling problems.
+
+You will need to install these packages and load this library to compute the posterior distribution.
+
+We use the **standarm** function **stan_glm** to estimagte the posterior distribution for the  to estimate the posterior distribution of the regression coefficients.
+
+```{r}
+
+```
+
+
+Note: Gekman et all write the regression function as 
+
+Then we estimate the regression, 
+
+$$y = a + bx + error$$ 
+
+
 
 
 ## References
 
 [1] Gelman, Andrew; Hill, Jennifer; Vehtari, Aki. Regression and Other Stories (Analytical Methods for Social Research) (p. 4). Cambridge University Press. Kindle Edition. 
+
+[2]Wikipedia, https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo.  Accessed December 10, 2020 as 11:30.  
+
+[3] Stan Organization, http://mc-stan.org/rstanarm/, Accessed December 10, 2020 at 11:50.
+
+[4] Gelman, Andrew; Hill, Jennifer; Vehtari, Aki. Regression and Other Stories (Analytical Methods for Social Research) (p. 4). Cambridge University Press. Kindle Edition. 
