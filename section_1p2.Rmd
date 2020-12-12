@@ -2,14 +2,14 @@
 title: "Section 1.2"
 author: "Andrew Gelmaan, at  all as implemnted by Craig Slinkman"
 date: "12/8/2020"
+header:-includes:
+  - \usepackage{amsfonts}
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
-
 
 
 Regression[1] is a method that allows researchers to summarize how predictions or average values of outcome vary across individuals defined by a set of predictors.
@@ -103,13 +103,13 @@ estimation techniques statistics.  For most of the models we can't are unable to
 
 >Markov chain Monte Carlo (MCMC) methods comprise a class of algorithms for sampling from a probability distribution. By constructing a Markov chain that has the desired distribution as its equilibrium distribution, one can obtain a sample of the desired distribution by recording states from the chain. The more steps that are included, the more closely the distribution of the sample matches the actual desired distribution. Various algorithms exist for constructing chains, including the Metropolis–Hastings algorithm.
 
-We use the R-package **stanarm** to estimate the posterior distribution.  According ro the Thbetase stand organization[3] the package  
+We use the R-package **stanarm** to estimate the posterior distribution.  According to the the stand organization[3] the package  
 
 >**rstanarm** is an R package that emulates other R model-fitting functions but uses Stan (via the rstan package) for the back-end estimation. The primary target audience is people who would be open to Bayesian inference if using Bayesian software were easier but would use frequentist software otherwise.
 
 >Fitting models with rstanarm is also useful for experienced Bayesian software users who want to take advantage of the pre-compiled Stan programs that are written by Stan developers and carefully implemented to prioritize numerical stability and the avoidance of sampling problems.
 
-You will need to install these packages and load this library to compute the posterior distribution. Tjhe packages that we will use are **rstan** and **rstanarm**. 
+You will need to install these packages and load this library to compute the posterior distribution. The packages that we will use are **rstan** and **rstanarm**. 
 
 We will now fir the data using the **R** function **stan_glm**. 
 
@@ -120,7 +120,7 @@ bayes <-                                # Fit regression using stan ...
 
 bayes                                   # Display regression coefficients ...
 
-beta <- coef( bayes )                   # Extract the regression coefficiients ...
+beta <- coef( bayes )                   # Extract the regression coefficients ...
 
 ```
 
@@ -128,14 +128,14 @@ Our estimated regression equation is:
 
 $$y = `r round( beta[1], 2)` + `r round(beta[2], 2)` x$$
 
-Now that we have the estimated regression coefficients or tather the medians of the posterior distributions of the regression coefficients we can add a line to* **figure_01.1b** as follows:
+Now that we have the estimated regression coefficients or rather the medians of the posterior distributions of the regression coefficients we can add a line to* **figure_01.1b** as follows:
 ```{r}
 figure_01.1b <-                         # Add regression line to scatterplot ...
   figure_01.1b +
   geom_abline( intercept = beta[1],
                slope     = beta[2])
 
-figure_01.1b                            # Add bayes regression line to scatterplot ...
+figure_01.1b                            # Add Bayes regression line to scatterplot ...
 ```
 
 If we want to compare compare the the Bayes estimates to the ordinary least squares (OLS) estimates we can do this as follows.  We will fit both models and add the predicted values for each estimate to the hibbs data.
@@ -151,7 +151,7 @@ beta2 <- coef( ols  )                   # Extract the OLS coefficients
 OLS <- fitted( ols )                    # Save OLS fitted values ...
 
 ################################################################################
-# We create a tibble that will be used to draw the scatterplot, anbd add the
+# We create a tibble that will be used to draw the scatterplot, and add the
 # fitted regression lines for each method.
 ################################################################################
 
@@ -164,9 +164,9 @@ fitted
 
 ################################################################################
 # The current tibble is in wide form format as each data value of the fitted
-# values is in a seperate column.  We will used the R-function pivot_longer to
-# put the fitted matierx in long form where the y-data values will be in a 
-# column and and the source of each value is recored in a new column.
+# values is in a separate column.  We will used the R-function pivot_longer to
+# put the fitted tibble in long form where the y-data values will be in a 
+# column and and the source of each value is recorded in a new column.
 ################################################################################
 
 long_form <-                           # Convert to long form
@@ -199,15 +199,30 @@ ggplot( long_form,
     theme_cowplot()
     
 
-
 ```
+### The three approaches to mesuring uncertainity 
 
- 
+There are three interpretation of probability[4].  They are the the classical theory of probability terpreination, the relative frequency interpretation, and the subjective probability interpretation.  The mathematical probability take the same form with all of the interpretations.
+
+#### Classical probabiligty
+
+Classical probability[5] that event E occurs is denoted by P(E). When all outcomes are equally likely. The peobability that the event $E$ occurs is given by:
+
+$$Pr(E) = \frac{the number\ of\ occurences\ of\ E}{number\ o\ possible\ outcomes}$$
+To use this interpretation you need to be able to compute or the number of outcomes.  It doesnot have much practical use other than in computing outcomes in games such as pokewr and craps. 
+
+
 
 ## References
 
 [1] Gelman, Andrew; Hill, Jennifer; Vehtari, Aki. Regression and Other Stories (Analytical Methods for Social Research) (p. 4). Cambridge University Press. Kindle Edition. 
 
-[2]Wikipedia, https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo.  Accessed December 10, 2020 as 11:30.  
+[2] Wikipedia, https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo.  Accessed December 10, 2020 as 11:30.  
 
-[3] Stan Organization, http://mc-stan.org/rstanarm/, Accessed December 10, 2020 at 11:50.
+[3] Stan Organization, http://mc-stan.org/rstanarm/, Accessed on December 10, 2020 at 11:50.
+
+[4] Penn State University Department of Statistics,  Statistical Notes Leeson 2, https://online.stat.psu.edu/stat500/lesson/2/2.3, accessed on 12/12/2020 at 12:23.
+
+[5] ibid, accessed on December 10, 2020 at 13:07.
+
+[6] 
