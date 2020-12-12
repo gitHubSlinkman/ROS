@@ -103,29 +103,106 @@ estimation techniques statistics.  For most of the models we can't are unable to
 
 >Markov chain Monte Carlo (MCMC) methods comprise a class of algorithms for sampling from a probability distribution. By constructing a Markov chain that has the desired distribution as its equilibrium distribution, one can obtain a sample of the desired distribution by recording states from the chain. The more steps that are included, the more closely the distribution of the sample matches the actual desired distribution. Various algorithms exist for constructing chains, including the Metropolis–Hastings algorithm.
 
-We use the R-package **rstan** and **rsyanarm** to estimate the posterior distributios for Bauesian estimation problems.  According ro the The stand organization[3] the package  
+We use the R-package **stanarm** to estimate the posterior distribution.  According ro the Thbetase stand organization[3] the package  
 
 >**rstanarm** is an R package that emulates other R model-fitting functions but uses Stan (via the rstan package) for the back-end estimation. The primary target audience is people who would be open to Bayesian inference if using Bayesian software were easier but would use frequentist software otherwise.
 
 >Fitting models with rstanarm is also useful for experienced Bayesian software users who want to take advantage of the pre-compiled Stan programs that are written by Stan developers and carefully implemented to prioritize numerical stability and the avoidance of sampling problems.
 
-You will need to install these packages and load this library to compute the posterior distribution.
+You will need to install these packages and load this library to compute the posterior distribution. Tjhe packages that we will use are **rstan** and **rstanarm**. 
 
-We use the **standarm** function **stan_glm** to estimagte the posterior distribution for the  to estimate the posterior distribution of the regression coefficients.
+We will now fir the data using the **R** function **stan_glm**. 
 
 ```{r}
+bayes <-                                # Fit regression using stan ...
+  stan_glm( vote ~growth, 
+            data = hibbs )
+
+bayes                                   # Display regression coefficients ...
+
+beta <- coef( bayes )                   # Extract the regression coefficiients ...
 
 ```
 
+Our estimated regression equation is:
 
-Note: Gekman et all write the regression function as 
+$$y = `r round( beta[1], 2)` + `r round(beta[2], 2)` x$$
 
-Then we estimate the regression, 
+Now that we have the estimated regression coefficients or tather the medians of the posterior distributions of the regression coefficients we can add a line to* **figure_01.1b** as follows:
+```{r}
+figure_01.1b <-                         # Add regression line to scatterplot ...
+  figure_01.1b +
+  geom_abline( intercept = beta[1],
+               slope     = beta[2])
 
-$$y = a + bx + error$$ 
+figure_01.1b                            # Add bayes regression line to scatterplot ...
+```
+
+If we want to compare compare the the Bayes estimates to the ordinary least squares (OLS) estimates we can do this as follows.  We will fit both models and add the predicted values for each estimate to the hibbs data.
+
+```{r}
+Bayes <- fitted( bayes )                # Save fitted values
+
+ols <- lm( vote ~ growth,               # Fit the OLS model ...
+           data = hibbs )
+
+beta2 <- coef( ols  )                   # Extract the OLS coefficients
+
+OLS <- fitted( ols )                    # Save OLS fitted values ...
+
+################################################################################
+# We create a tibble that will be used to draw the scatterplot, anbd add the
+# fitted regression lines for each method.
+################################################################################
+
+fitted <- add_column( hibbs,   Bayes )
+fitted <- add_column( fitted, OLS )
+
+fitted 
+                                        # Verify columns added ...
 
 
+################################################################################
+# The current tibble is in wide form format as each data value of the fitted
+# values is in a seperate column.  We will used the R-function pivot_longer to
+# put the fitted matierx in long form where the y-data values will be in a 
+# column and and the source of each value is recored in a new column.
+################################################################################
 
+long_form <-                           # Convert to long form
+  pivot_longer( fitted,
+                cols = c( Bayes, OLS ),
+                names_to = "Fit",
+                values_to = "Fitted" )
+
+long_form                               # Confirm long_form  
+
+            
+################################################################################
+# We can know plot the both regression lines on our scatter plot as follows.
+################################################################################
+
+ggplot( long_form,
+        aes( x = growth, 
+             y = vote )) +
+  geom_point() +
+  geom_line( aes( x = growth, 
+                  y =  Fitted, 
+                  color = Fit )) +
+  scale_x_continuous( name   = "Average recent growth in personal income",
+                        labels = scales::percent_format(accuracy = 1,
+                                                        scale    = 1.0)) +
+  scale_y_continuous( name   = "Incumbet party's vote share",
+                        labels = scales::percent_format( accuracy = 1,
+                                                         scale    = 1)) +
+    ggtitle( "Comparison of Bayes and OLS Fits" ) +
+    theme_cowplot()
+    
+
+
+```
+
+ 
 
 ## References
 
@@ -134,5 +211,3 @@ $$y = a + bx + error$$
 [2]Wikipedia, https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo.  Accessed December 10, 2020 as 11:30.  
 
 [3] Stan Organization, http://mc-stan.org/rstanarm/, Accessed December 10, 2020 at 11:50.
-
-[4] Gelman, Andrew; Hill, Jennifer; Vehtari, Aki. Regression and Other Stories (Analytical Methods for Social Research) (p. 4). Cambridge University Press. Kindle Edition. 
